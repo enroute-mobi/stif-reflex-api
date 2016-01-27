@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PublicationDelivery xmlns:acsb="http://www.ifopt.org.uk/acsb" xmlns:ifopt="http://www.ifopt.org.uk/ifopt" xmlns="http://www.netex.org.uk/netex" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:siri="http://www.siri.org.uk/siri" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="/bundles/stifrcl/xsd/NeTEx_publication.xsd">
+  <PublicationTimestamp>2001-12-17T09:30:47.0Z</PublicationTimestamp>
+  <ParticipantRef>SYS001</ParticipantRef>
+  <!-- -->
+  <!--- =============== RESULTS =========== -->
+  <dataObjects>
+    <!-- =========================================== -->
+    <CompositeFrame version="1" created="2009-12-02T00:00:00Z" id="STIF:CODIFLIGNE:CompositeFrame:1">
+      <frames>
+        <!-- ====NETWORK==== -->
+        <ServiceFrame version="any" id="STIF:CODIFLIGNE:ServiceFrame:3">
+          <Network version="any" changed="2009-12-02T00:00:00Z" id="STIF:CODIFLIGNE:PTNetwork:3">
+            <Name>ADP</Name>
+            <members>
+              <LineRef ref="STIF:CODIFLIGNE:Line:C00562"/>
+              <LineRef ref="STIF:CODIFLIGNE:Line:C01792"/>
+            </members>
+          </Network>
+        </ServiceFrame>
+        <ServiceFrame version="any" id="STIF:CODIFLIGNE:ServiceFrame:54">
+          <Network version="any" changed="2009-12-02T00:00:00Z" id="STIF:CODIFLIGNE:PTNetwork:54">
+            <Name>Navette</Name>
+            <members>
+              <LineRef ref="STIF:CODIFLIGNE:Line:C00563"/>
+            </members>
+          </Network>
+        </ServiceFrame>
+        <ServiceFrame version="any" id="STIF:CODIFLIGNE:ServiceFrame:lineid">
+          <!-- ====LINES===== -->
+          <lines>
+            <Line version="any" created="2014-07-16T00:00:00+02:00" changed="2015-10-27T15:54:56+01:00" status="active" id="STIF:CODIFLIGNE:Line:C00562">
+              <keyList>
+                <KeyValue>
+                  <!-- Ceci est l accessibilite de la ligne : 0 si false , 1 si true -->
+                  <Key>Accessibility</Key>
+                  <Value>0</Value>
+                </KeyValue>
+              </keyList>
+              <Name>N1</Name>
+              <ShortName>N1</ShortName>
+              <TransportMode>bus</TransportMode>
+              <TransportSubmode>
+                <BusSubmode/>
+              </TransportSubmode>
+              <!-- Ceci est le code technique -->
+              <PrivateCode>043043001</PrivateCode>
+              <OperatorRef version="any" ref="STIF:CODIFLIGNE:Operator:043"/>
+              <!-- Type of line null ou égal à seasonal -->
+              <TypeOfLineRef version="any" ref="null"/>
+              <Presentation>
+                <infoLinks/>
+              </Presentation>
+            </Line>
+            <Line version="any" created="2014-07-16T00:00:00+02:00" changed="2014-07-16T00:00:00+02:00" status="active" id="STIF:CODIFLIGNE:Line:C00563">
+              <keyList>
+                <KeyValue>
+                  <!-- Ceci est l accessibilite de la ligne : 0 si false , 1 si true -->
+                  <Key>Accessibility</Key>
+                  <Value>1</Value>
+                </KeyValue>
+              </keyList>
+              <Name>CDG VAL</Name>
+              <ShortName>CDG VAL</ShortName>
+              <TransportMode>rail</TransportMode>
+              <TransportSubmode>
+                <RailSubmode>railShuttle</RailSubmode>
+              </TransportSubmode>
+              <!-- Ceci est le code technique -->
+              <PrivateCode>043043100</PrivateCode>
+              <OperatorRef version="any" ref="STIF:CODIFLIGNE:Operator:043"/>
+              <!-- Type of line null ou égal à seasonal -->
+              <TypeOfLineRef version="any" ref="null"/>
+              <Presentation>
+                <infoLinks/>
+              </Presentation>
+            </Line>
+            <Line version="any" created="2014-10-24T15:28:33+02:00" changed="2014-10-24T15:30:06+02:00" status="active" id="STIF:CODIFLIGNE:Line:C01792">
+              <keyList>
+                <KeyValue>
+                  <!-- Ceci est l accessibilite de la ligne : 0 si false , 1 si true -->
+                  <Key>Accessibility</Key>
+                  <Value>0</Value>
+                </KeyValue>
+              </keyList>
+              <Name>N2</Name>
+              <ShortName>N2</ShortName>
+              <TransportMode>bus</TransportMode>
+              <TransportSubmode>
+                <BusSubmode/>
+              </TransportSubmode>
+              <!-- Ceci est le code technique -->
+              <PrivateCode>043043002</PrivateCode>
+              <OperatorRef version="any" ref="STIF:CODIFLIGNE:Operator:043"/>
+              <!-- Type of line null ou égal à seasonal -->
+              <TypeOfLineRef version="any" ref="null"/>
+              <Presentation>
+                <infoLinks/>
+              </Presentation>
+            </Line>
+          </lines>
+          <!-- ====GROUP OF LINES===== -->
+          <groupsOfLines>
+            <GroupOfLines responsibilitySetRef="STIF:CODIFLIGNE:ResponsibilitySet:A01516" version="any" created="2014-07-16T00:00:00+02:00" changed="2014-07-16T00:00:00+02:00" status="active" id="STIF:CODIFLIGNE:GroupOfLines:A01516">
+              <keyList>
+                <KeyValue>
+                  <Key>TransportSubmode</Key>
+                  <Value>railShuttle</Value>
+                </KeyValue>
+                <!-- Ceci est le code TS -->
+                <KeyValue>
+                  <Key>ExternalLineRef</Key>
+                  <Value/>
+                </KeyValue>
+              </keyList>
+              <Name>CDG VAL</Name>
+              <ShortName>CDG VAL</ShortName>
+              <!-- Ceci est le code STIF -->
+              <PrivateCode>043043100</PrivateCode>
+              <members>
+                <LineRef ref="STIF:CODIFLIGNE:Line:C00563"/>
+              </members>
+              <TransportMode>rail</TransportMode>
+            </GroupOfLines>
+          </groupsOfLines>
+        </ServiceFrame>
+        <!-- ====RESOURCE FRAME===== -->
+        <ResourceFrame version="any" id="STIF:CODIFLIGNE:ResourceFrame:1">
+          <!-- =====Responsibility====== -->
+          <responsibilitySets>
+            <ResponsibilitySet version="any" id="STIF:CODIFLIGNE:ResponsibilitySet:A01516">
+              <Extensions>
+                <SimpleValidityCondition>
+                  <FromDate>2014-07-16T00:00:00+02:00</FromDate>
+                  <ToDate> 2016-01-27T11:00:21+01:00 </ToDate>
+                </SimpleValidityCondition>
+                <TypeOfResponsibilityRoleRef ref="STIF:CODIFLIGNE:TypeOfResponsibilityRole:Hors contrat"/>
+              </Extensions>
+              <roles>
+                <!-- Ceci est le libelle du contrat -->
+                <ResponsibilityRoleAssignment version="any" id="STIF:CODIFLIGNE:ResponsibilityRoleAssignment:">
+                  <Description>Hors contrat</Description>
+                </ResponsibilityRoleAssignment>
+              </roles>
+            </ResponsibilitySet>
+          </responsibilitySets>
+          <!-- =====types of value====== -->
+          <typesOfValue>
+            <TypeOfLine version="any" id="STIF:CODIFLIGNE:seasonal"/>
+          </typesOfValue>
+          <!-- =====Organisations====== -->
+          <organisations>
+            <Operator version="any" id="STIF:CODIFLIGNE:Operator:043">
+              <Name>ADP</Name>
+            </Operator>
+          </organisations>
+        </ResourceFrame>
+      </frames>
+    </CompositeFrame>
+  </dataObjects>
+</PublicationDelivery>
