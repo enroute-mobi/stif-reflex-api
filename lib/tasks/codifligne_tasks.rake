@@ -11,10 +11,12 @@ namespace :codifligne do
     client.operators.each do |operator|
       unless Codifligne::Operator.exists?(:stif_id => operator.stif_id)
         puts "creating operator : #{operator.name}\n"
+        next unless operator.valid?
         operator.save
 
         # Assign lines to operator
         client.lines(operator.name).each do |line|
+          next unless line.valid?
           exist = Codifligne::Line.where(stif_id: line.stif_id).first
           if exist
             operator.lines << exist
