@@ -4,27 +4,52 @@
 # end
 
 namespace :codifligne do
-  desc 'Populate operators'
+  def retrieve_or_create_line(params)
+    line = Codifligne::Line.where(stif_id: params[:stif_id]).first
+    line = Codifligne::Line.new(params) unless line
+
+    line.valid? ? line : nil
+  end
+
+  def retrieve_or_create_operator(params)
+    operator = Codifligne::Operator.where(stif_id: params[:stif_id]).first
+    operator = Codifligne::Operator.new(params) unless operator
+
+    operator.valid? ? operator : nil
+  end
+
+  desc 'Populate Codifligne models with stif codifligne api data'
   task populate: :environment do
     client = Codifligne::API.new
 
-    client.operators.each do |operator|
-      unless Codifligne::Operator.exists?(:stif_id => operator.stif_id)
-        puts "creating operator : #{operator.name}\n"
-        next unless operator.valid?
-        operator.save
+    client.operators.each do |params|
+      operator = retrieve_or_create_operator(params)
+      next unless operator
 
-        # Assign lines to operator
-        client.lines(operator.name).each do |line|
-          next unless line.valid?
-          exist = Codifligne::Line.where(stif_id: line.stif_id).first
-          if exist
-            operator.lines << exist
-          else
-            line.save
-            operator.lines << line
-          end
+      puts "--------------------------------------"
+      if operator.new_record?
+        operator.save
+        puts "Create new operator : #{operator.name}"
+      else
+        operator.update_attributes(params)
+        operator.lines =[]
+        puts "Updating operator : #{operator.name}"
+      end
+
+      # Update operator lines
+      client.lines(operator.name).each do |params|
+        line = retrieve_or_create_line(params)
+        next unless line
+
+        if line.new_record?
+          line.save
+          puts "Create new line : #{line.name}"
+        else
+          line.update_attributes(params)
+          puts "Updating line : #{line.name}"
         end
+
+        operator.lines << line
       end
     end
   end
