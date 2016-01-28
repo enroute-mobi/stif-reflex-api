@@ -13,4 +13,7 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem "webmock", "~> 1.22.6" , group: [:test]
+group :test do
+  gem "webmock", "~> 1.22.6"
+  gem "shoulda-matchers", "~> 3.1"
+end
