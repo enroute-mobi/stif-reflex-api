@@ -1,14 +1,15 @@
 module Codifligne
   class API
+    DEFAULT_TIMEOUT  = 30
+    DEFAULT_FORMAT   = 'xml'
+    DEFAULT_BASE_URL = "http://codifligne.stif.info/rest/v1/lc/getlist"
+
     attr_accessor :timeout, :format, :base_url
 
-    def initialize(timeout: 30, format: 'xml')
-      @timeout = timeout
-      @format  = format
-    end
-
-    def base_url
-      "https://codifligne.stif.info/rest/v1/lc/getlist"
+    def initialize(timeout: nil, format: nil)
+      @timeout  = timeout || self.class.timeout || DEFAULT_TIMEOUT
+      @format   = format || self.class.format || DEFAULT_FORMAT
+      @base_url = self.class.base_url || DEFAULT_BASE_URL
     end
 
     def api_request(url)
@@ -68,5 +69,9 @@ module Codifligne
       end.to_a
     end
 
+
+    class << self
+      attr_accessor :timeout, :format, :base_url
+    end
   end
 end

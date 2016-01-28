@@ -34,6 +34,13 @@ line      = Codifligne::Line.take
 operators = line.operators
 ```
 
+You can set timeout and override api base url globally in your config/initializers/codifligne.rb
+```ruby
+Codifligne::API.base_url = "https://codifligne.stif.info/rest/v1/lc/getlist"
+Codifligne::API.timeout  = 50
+```
+
+
 # Tests
 ```ruby
 cd stif-codifline-api

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Codifligne do
-  let(:client) { Codifligne::API.new() }
+  let(:client) { Codifligne::API.new }
   let(:api_index_url) { "#{client.base_url}/0/0/0/0/0/0/0/xml"}
 
   it 'should have a version number' do
@@ -10,6 +10,10 @@ describe Codifligne do
 
   it 'should have a default timeout value' do
     expect(client.timeout).to equal(30)
+  end
+
+  it 'should set timeout from initializer' do
+    expect(Codifligne::API.new(timeout: 60).timeout).to equal(60)
   end
 
   it 'should raise exception on Codifligne API response 404' do
