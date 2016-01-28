@@ -12,7 +12,20 @@ module Codifligne
       @base_url = self.class.base_url || DEFAULT_BASE_URL
     end
 
-    def api_request(url)
+    def api_request(params = {})
+      default = {
+        :code              => 0,
+        :name              => 0,
+        :operator_code     => 0,
+        :operator_name     => 0,
+        :transport_mode    => 0,
+        :transport_submode => 0,
+        :date              => 0,
+        :format            => self.format
+      }
+      query = default.merge(params).map{|k, v| v}.to_a.join('/')
+      url   = "#{self.base_url}/#{query}"
+
       begin
         open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
       rescue Exception => e
@@ -32,9 +45,7 @@ module Codifligne
     end
 
     def lines(operator_name)
-      url = URI.escape "#{self.base_url}/0/0/0/#{operator_name}/0/0/0/#{self.format}"
-      doc = parse_response(api_request(url))
-
+      doc = self.parse_response(self.api_request(operator_name: operator_name))
       attrs = {
         :name           => 'Name',
         :short_name     => 'ShortName',
@@ -61,8 +72,7 @@ module Codifligne
     end
 
     def operators
-      url = "#{self.base_url}/0/0/0/0/0/0/0/#{self.format}"
-      doc = parse_response(api_request(url))
+      doc = self.parse_response(self.api_request)
 
       doc.css('Operator').map do |operator|
         { name: operator.content, stif_id: operator.attribute('id').to_s }

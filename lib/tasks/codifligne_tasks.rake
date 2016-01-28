@@ -18,6 +18,26 @@ namespace :codifligne do
     operator.valid? ? operator : nil
   end
 
+  def update_lines(operator)
+    client = Codifligne::API.new
+
+    client.lines(operator.name).each do |params|
+      line = retrieve_or_create_line(params)
+      next unless line
+
+      if line.new_record?
+        line.save
+        puts "Create new line : #{line.name}"
+      else
+        line.assign_attributes(params)
+        line.save if line.changed?
+        puts "Updating line : #{line.name}"
+      end
+
+      operator.lines << line
+    end
+  end
+
   desc 'Populate Codifligne models with stif codifligne api data'
   task populate: :environment do
     client = Codifligne::API.new
@@ -36,21 +56,7 @@ namespace :codifligne do
         puts "Updating operator : #{operator.name}"
       end
 
-      # Update operator lines
-      client.lines(operator.name).each do |params|
-        line = retrieve_or_create_line(params)
-        next unless line
-
-        if line.new_record?
-          line.save
-          puts "Create new line : #{line.name}"
-        else
-          line.update_attributes(params)
-          puts "Updating line : #{line.name}"
-        end
-
-        operator.lines << line
-      end
+      update_lines(operator)
     end
   end
 end
