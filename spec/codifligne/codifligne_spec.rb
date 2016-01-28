@@ -37,7 +37,7 @@ describe Codifligne do
     url = "#{client.base_url}/0/0/0/ADP/0/0/0/xml"
     xml = File.new(fixture_path + '/line.xml')
     stub_request(:get, url).to_return(body: xml)
-    expect(client.lines('ADP').count).to equal(3)
+    expect(client.lines(operator_name: 'ADP').count).to equal(3)
   end
 
   it 'should raise exception on Api call timeout' do

@@ -21,7 +21,7 @@ namespace :codifligne do
   def update_lines(operator)
     client = Codifligne::API.new
 
-    client.lines(operator.name).each do |params|
+    client.lines(operator_name: operator.name).each do |params|
       line = retrieve_or_create_line(params)
       next unless line
 

@@ -44,8 +44,8 @@ module Codifligne
       end
     end
 
-    def lines(operator_name)
-      doc = self.parse_response(self.api_request(operator_name: operator_name))
+    def lines(params)
+      doc = self.parse_response(self.api_request(params))
       attrs = {
         :name           => 'Name',
         :short_name     => 'ShortName',
