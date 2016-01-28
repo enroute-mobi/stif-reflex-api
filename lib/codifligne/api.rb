@@ -24,7 +24,7 @@ module Codifligne
         :format            => self.format
       }
       query = default.merge(params).map{|k, v| v}.to_a.join('/')
-      url   = "#{self.base_url}/#{query}"
+      url   = URI.escape "#{self.base_url}/#{query}"
 
       begin
         open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
