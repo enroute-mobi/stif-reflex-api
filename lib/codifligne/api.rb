@@ -2,7 +2,7 @@ module Codifligne
   class API
     DEFAULT_TIMEOUT  = 30
     DEFAULT_FORMAT   = 'xml'
-    DEFAULT_BASE_URL = "http://codifligne.stif.info/rest/v1/lc/getlist"
+    DEFAULT_BASE_URL = "https://codifligne.stif.info/rest/v1/lc/getlist"
 
     attr_accessor :timeout, :format, :base_url
 
