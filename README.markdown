@@ -43,6 +43,5 @@ Codifligne::API.timeout  = 50
 # Tests
 ```ruby
 cd stif-codifline-api
-rake db:migrate RAILS_ENV=test
 rspec spec/codifligne
 ```

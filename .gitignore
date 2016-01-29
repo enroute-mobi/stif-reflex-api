@@ -7,4 +7,4 @@ spec/test_app/log/*.log
 spec/test_app/tmp/
 spec/test_app/.sass-cache
 codifligne-*.gem
-.DS_Store
+*.DS_Store
