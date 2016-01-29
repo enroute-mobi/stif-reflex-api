@@ -18,20 +18,19 @@ Add to your project
 ```ruby
 gem 'codifligne'
 bundle install
-rake codifligne:install:migrations
-rake db:migrate
-rake codifligne:populate
 ```
 
 Usage
 ```ruby
-# Retrieve lines from a operator
-operators = Codifligne::Operator.take
-lines     = operator.lines
+# Retrieve all operators
+client    = Codifligne::API.new
+operators = client.operators
 
-# Retrieve operators from a line
-line      = Codifligne::Line.take
-operators = line.operators
+# Retrieve operators by transport_mode
+operators = client.operators(transport_mode: 'fer')
+
+# Retrieve all line  by operator name
+lines = client.lines(operator_name: 'ADP')
 ```
 
 You can set timeout and override api base url globally in your config/initializers/codifligne.rb

@@ -12,7 +12,7 @@ module Codifligne
       @base_url = self.class.base_url || DEFAULT_BASE_URL
     end
 
-    def api_request(params = {})
+    def build_url(params = {})
       default = {
         :code              => 0,
         :name              => 0,
@@ -25,7 +25,10 @@ module Codifligne
       }
       query = default.merge(params).map{|k, v| v}.to_a.join('/')
       url   = URI.escape "#{self.base_url}/#{query}"
+    end
 
+    def api_request(params = {})
+      url = build_url(params)
       begin
         open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
       rescue Exception => e
@@ -44,7 +47,7 @@ module Codifligne
       end
     end
 
-    def lines(params)
+    def lines(params = {})
       doc = self.parse_response(self.api_request(params))
       attrs = {
         :name           => 'Name',
@@ -67,15 +70,15 @@ module Codifligne
         attrs.map do |prop, xml_name|
           params[prop] = line.at_css(xml_name).content
         end
-        params
+        Codifligne::Line.new(params)
       end.to_a
     end
 
-    def operators
-      doc = self.parse_response(self.api_request)
+    def operators(params = {})
+      doc = self.parse_response(self.api_request(params))
 
       doc.css('Operator').map do |operator|
-        { name: operator.content, stif_id: operator.attribute('id').to_s }
+        Codifligne::Operator.new({ name: operator.content, stif_id: operator.attribute('id').to_s })
       end.to_a
     end
 

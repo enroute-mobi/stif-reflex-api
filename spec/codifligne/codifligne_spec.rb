@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Codifligne do
   let(:client) { Codifligne::API.new }
-  let(:api_index_url) { "#{client.base_url}/0/0/0/0/0/0/0/xml"}
+  let(:api_index_url) { client.build_url() }
 
   it 'should have a version number' do
     expect(Codifligne::VERSION).not_to be nil
@@ -24,7 +24,10 @@ describe Codifligne do
   it 'should return operators on valid operator request' do
     xml = File.new(fixture_path + '/index.xml')
     stub_request(:get, api_index_url).to_return(body: xml)
-    expect(client.operators.count).to equal(82)
+    operators = client.operators()
+
+    expect(operators.count).to equal(82)
+    expect(operators.first).to be_a(Codifligne::Operator)
   end
 
   it 'should raise exception on unparseable response' do
@@ -33,11 +36,24 @@ describe Codifligne do
     expect { client.operators }.to raise_error(Codifligne::CodifligneError)
   end
 
+  it 'should return operators by transport_mode' do
+    url = client.build_url(transport_mode: 'fer')
+    xml = File.new(fixture_path + '/index_transport_mode.xml')
+    stub_request(:get, url).to_return(body: xml)
+    operators = client.operators(transport_mode: 'fer')
+
+    expect(operators.count).to equal(3)
+    expect(operators.first).to be_a(Codifligne::Operator)
+  end
+
   it 'should return operators on valid line request' do
     url = "#{client.base_url}/0/0/0/ADP/0/0/0/xml"
     xml = File.new(fixture_path + '/line.xml')
     stub_request(:get, url).to_return(body: xml)
-    expect(client.lines(operator_name: 'ADP').count).to equal(3)
+    lines = client.lines(operator_name: 'ADP')
+
+    expect(lines.count).to equal(3)
+    expect(lines.first).to be_a(Codifligne::Line)
   end
 
   it 'should raise exception on Api call timeout' do
