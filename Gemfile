@@ -15,5 +15,4 @@ gemspec
 
 group :test do
   gem "webmock", "~> 1.22.6"
-  gem "shoulda-matchers", "~> 3.1"
 end

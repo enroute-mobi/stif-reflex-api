@@ -16,11 +16,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.markdown"]
   s.required_ruby_version = '>= 2.0.0'
 
-  s.add_development_dependency "rails", '~>4.2'
-  s.add_development_dependency "sqlite3", "~>1.3"
   s.add_development_dependency "awesome_print", "~> 1.6"
   s.add_development_dependency "bundler", "~> 1.11"
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "rspec-rails", "~>3.1"
-  s.add_development_dependency "shoulda-matchers", "~>3.1"
 end
