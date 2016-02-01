@@ -72,8 +72,10 @@ module Codifligne
           params[prop] = line.at_css(xml_name).content
         end
 
-        params[:accessibility]     = line.css('Key:contains("Accessibility")').first.next_element.content
-        params[:transport_submode] = line.css('TransportSubmode').first.content
+        params[:accessibility] = line.css('Key:contains("Accessibility")').first.next_element.content
+        if line.css('TransportSubmode').first
+          params[:transport_submode] = line.css('TransportSubmode').first.content
+        end
         params = Hash[params.map{ |k, v| [k, v.strip] }]
 
         Codifligne::Line.new(params)
