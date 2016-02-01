@@ -47,10 +47,10 @@ describe Codifligne do
   end
 
   it 'should return operators on valid line request' do
-    url = "#{client.base_url}/0/0/0/ADP/0/0/0/xml"
+    url = "#{client.base_url}/0/0/0/RATP/0/0/0/xml"
     xml = File.new(fixture_path + '/line.xml')
     stub_request(:get, url).to_return(body: xml)
-    lines = client.lines(operator_name: 'ADP')
+    lines = client.lines(operator_name: 'RATP')
 
     expect(lines.count).to equal(3)
     expect(lines.first).to be_a(Codifligne::Line)

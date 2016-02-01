@@ -64,12 +64,18 @@ module Codifligne
 
       doc.css('lines Line').map do |line|
         params = {}
+
         inline_attrs.map do |prop, xml_attr|
           params[prop] = line.attribute(xml_attr).to_s
         end
         attrs.map do |prop, xml_name|
           params[prop] = line.at_css(xml_name).content
         end
+
+        params[:accessibility]     = line.css('Key:contains("Accessibility")').first.next_element.content
+        params[:transport_submode] = line.css('TransportSubmode').first.content
+        params = Hash[params.map{ |k, v| [k, v.strip] }]
+
         Codifligne::Line.new(params)
       end.to_a
     end
@@ -78,7 +84,7 @@ module Codifligne
       doc = self.parse_response(self.api_request(params))
 
       doc.css('Operator').map do |operator|
-        Codifligne::Operator.new({ name: operator.content, stif_id: operator.attribute('id').to_s })
+        Codifligne::Operator.new({ name: operator.content.strip, stif_id: operator.attribute('id').to_s.strip })
       end.to_a
     end
 
