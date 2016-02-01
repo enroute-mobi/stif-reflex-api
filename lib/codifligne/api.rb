@@ -74,10 +74,12 @@ module Codifligne
 
         params[:accessibility]     = line.css('Key:contains("Accessibility")').first.next_element.content
         submode                    = line.css('TransportSubmode')
-        params[:transport_submode] = submode.first.content if submode.first
-        params[:operator_code]     = line.css('OperatorRef').attribute('ref').to_s.split(':').last
+        params[:transport_submode] = submode.first.content.strip if submode.first
+        params[:operator_code]     = []
+        line.css('OperatorRef').each do |operator|
+          params[:operator_code] << operator.attribute('ref').to_s.split(':').last
+        end
 
-        params = Hash[params.map{ |k, v| [k, v.strip] }]
         Codifligne::Line.new(params)
       end.to_a
     end
