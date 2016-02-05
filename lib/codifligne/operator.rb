@@ -8,5 +8,9 @@ module Codifligne
       end
     end
 
+    def lines
+      client = Codifligne::API.new
+      client.lines(operator_name: self.name)
+    end
   end
 end

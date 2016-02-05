@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Codifligne do
   let(:client) { Codifligne::API.new }
   let(:api_index_url) { client.build_url() }
+  let(:operator) { Codifligne::Operator.new({name: 'RATP'}) }
 
   it 'should have a version number' do
     expect(Codifligne::VERSION).not_to be nil
@@ -15,6 +16,12 @@ describe Codifligne do
   it 'should set timeout from initializer' do
     expect(Codifligne::API.new(timeout: 60).timeout).to equal(60)
   end
+
+  it 'should raise exception on Api call timeout' do
+    stub_request(:get, api_index_url).to_timeout
+    expect { client.operators }.to raise_error(Codifligne::CodifligneError)
+  end
+
 
   it 'should raise exception on Codifligne API response 404' do
     stub_request(:get, api_index_url).to_return(status: 404)
@@ -47,17 +54,21 @@ describe Codifligne do
   end
 
   it 'should return operators on valid line request' do
-    url = client.build_url(operator_name: 'ADP')
+    url = client.build_url(operator_name: 'RATP')
     xml = File.new(fixture_path + '/line.xml')
     stub_request(:get, url).to_return(body: xml)
 
-    lines = client.lines(operator_name: 'ADP')
+    lines = client.lines(operator_name: 'RATP')
     expect(lines.count).to equal(382)
     expect(lines.first).to be_a(Codifligne::Line)
   end
 
-  it 'should raise exception on Api call timeout' do
-    stub_request(:get, api_index_url).to_timeout
-    expect { client.operators }.to raise_error(Codifligne::CodifligneError)
+  it 'should retrieve lines with Operator lines method' do
+    url = client.build_url(operator_name: 'RATP')
+    xml = File.new(fixture_path + '/line.xml')
+    stub_request(:get, url).to_return(body: xml)
+
+    expect(operator.lines.count).to equal(382)
   end
+
 end
