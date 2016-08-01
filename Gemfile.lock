@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    codifligne (0.0.1)
+    reflex (0.0.1)
       nokogiri (~> 1.6)
 
 GEM
@@ -13,9 +13,11 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     hashdiff (0.2.3)
-    mini_portile2 (2.0.0)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    mini_portile2 (2.1.0)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
+    pkg-config (1.1.7)
     rake (10.5.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
@@ -42,10 +44,10 @@ PLATFORMS
 DEPENDENCIES
   awesome_print (~> 1.6)
   bundler (~> 1.11)
-  codifligne!
   rake (~> 10.0)
+  reflex!
   rspec (~> 3.4)
   webmock (~> 1.22.6)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

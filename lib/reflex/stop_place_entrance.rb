@@ -1,5 +1,5 @@
-module Codifligne
-  class Operator
+module Reflex
+  class StopPlaceEntrance
     attr_accessor :name, :stif_id
 
     def initialize params
@@ -8,9 +8,5 @@ module Codifligne
       end
     end
 
-    def lines
-      client = Codifligne::API.new
-      client.lines(operator_name: self.name)
-    end
   end
 end

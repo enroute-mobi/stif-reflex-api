@@ -1,3 +1,3 @@
-module Codifligne
+module Reflex
   VERSION = "0.0.1"
 end
