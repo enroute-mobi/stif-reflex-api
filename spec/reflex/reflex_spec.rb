@@ -14,15 +14,14 @@ describe Reflex do
     end
 
     start = Time.now
-    get_op = client.process 'getOP'
+    # get_op = client.process 'getOP'
     get_or = client.process 'getOR'
 
     # ap get_op[:stop_places].count
-    puts "GET_OP STOP PLACES COUNT : #{get_op[:stop_places].count}"
+    # puts "GET_OP STOP PLACES COUNT : #{get_op[:stop_places].count}"
     ap '------------'
     puts "GET_OR STOP PLACES COUNT : #{get_or[:stop_places].count}"
-    ap '------------'
-
+    # ap '------------'
     # get_op[:stop_places] << get_or[:stop_places]
     # get_op[:stop_places].flatten!
 
@@ -37,7 +36,6 @@ describe Reflex do
     # puts "TOTAL : #{ids.count}"
     # puts "Doublons : #{doublons.count}"
     puts "Processed in #{Time.now - start} seconds"
-
   end
 
   # it 'should have a default timeout value' do

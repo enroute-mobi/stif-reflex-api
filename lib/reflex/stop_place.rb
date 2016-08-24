@@ -16,7 +16,6 @@ module Reflex
         params[attr] = node.css('StopPlace').attribute(attr.to_s).to_s
       end
 
-
       params[:name]              = node.at_css('Name').content
       params[:city]              = node.at_css('Town').content
       params[:postal_code]       = node.at_css('PostalRegion').content
@@ -31,8 +30,6 @@ module Reflex
       if node.at_css('ParentSiteRef')
         params[:parent_site_ref]         = node.at_css('ParentSiteRef').attribute('ref').to_s
         params[:parent_site_ref_version] = node.at_css('ParentSiteRef').attribute('version').to_s
-              ap params
-              abort
       end
 
       StopPlace.new params

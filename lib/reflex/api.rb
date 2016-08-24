@@ -46,14 +46,20 @@ module Reflex
 
       stop_places          = []
       stop_place_entrances = []
+      quays                = []
       reader.each do |node|
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
         case node.name
           when "StopPlace"         then stop_places << Reflex::StopPlaceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
           when "StopPlaceEntrance" then stop_place_entrances << Reflex::StopPlaceEntranceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
+          when "Quay"              then quays << Reflex::QuayNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
         end
       end
-      {:stop_places => stop_places, :stop_place_entrances => stop_place_entrances}
+      {
+        :stop_places          => stop_places,
+        :stop_place_entrances => stop_place_entrances,
+        :quay                 => quays
+      }
     end
 
     class << self
