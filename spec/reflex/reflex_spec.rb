@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Reflex do
   let(:client)  { Reflex::API.new }
-  let(:api_url) { "https://reflex.stif.info/ws/reflex/V1/service=getData/?format=xml&idRefa=0&method=getOR" }
+  let(:api_url) { "https://reflex.stif.info/ws/reflex/V1/service=getData/?format=xml&idRefa=0" }
 
   it 'should have a version number' do
     expect(Reflex::VERSION).not_to be nil
@@ -17,12 +17,12 @@ describe Reflex do
   end
 
   it 'should raise exception on Api call timeout' do
-    stub_request(:get, api_url).to_timeout
+    stub_request(:get, "#{api_url}&method=getOR").to_timeout
     expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
   end
 
   it 'should raise exception on Reflex API response 404' do
-    stub_request(:get, api_url).to_return(status: 404)
+    stub_request(:get, "#{api_url}&method=getOR").to_return(status: 404)
     expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
   end
 
@@ -30,7 +30,7 @@ describe Reflex do
     let(:process_results) { client.process 'getOR' }
     before(:each) do
       ['getOR', 'getOP'].each do |name|
-        stub_request(:get, "https://reflex.stif.info/ws/reflex/V1/service=getData/?format=xml&idRefa=0&method=#{name}").
+        stub_request(:get, "#{api_url}&method=#{name}").
         to_return(body: File.open("#{fixture_path}/#{name.downcase}.zip"), status: 200)
       end
     end

@@ -27,6 +27,13 @@ module Reflex
         params[entry.at_css('Key').content.downcase] = entry.at_css('Value').content
       end
 
+      params[:quays] = node.css('QuayRef').map do |quay|
+        {
+          ref: quay.attribute('ref').to_s,
+          version: quay.attribute('version').to_s
+        }
+      end
+
       if node.at_css('ParentSiteRef')
         params[:parent_site_ref]         = node.at_css('ParentSiteRef').attribute('ref').to_s
         params[:parent_site_ref_version] = node.at_css('ParentSiteRef').attribute('version').to_s
