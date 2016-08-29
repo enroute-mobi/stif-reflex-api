@@ -21,6 +21,7 @@ module Reflex
       params[:postal_code]              = node.at_css('PostalRegion').content
       params[:mobility_impaired_access] = node.at_css('MobilityImpairedAccess').content
       params[:xml]                      = node.to_s
+      params[:area_type]                = 'Quay'
 
       node.css('KeyValue').each do |entry|
         params[entry.at_css('Key').content.downcase] = entry.at_css('Value').content

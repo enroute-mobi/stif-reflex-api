@@ -44,21 +44,21 @@ module Reflex
       zipfile    = self.api_request(method: method)
       reader     = self.parse_response zipfile
 
-      stop_places          = []
-      stop_place_entrances = []
-      quays                = []
+      stop_places          = {}
+      stop_place_entrances = {}
+      quays                = {}
       reader.each do |node|
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
         case node.name
-          when "StopPlace"         then stop_places << Reflex::StopPlaceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
-          when "StopPlaceEntrance" then stop_place_entrances << Reflex::StopPlaceEntranceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
-          when "Quay"              then quays << Reflex::QuayNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
+          when "StopPlace"         then stop_places[node.attribute('id')] = Reflex::StopPlaceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
+          when "StopPlaceEntrance" then stop_place_entrances[node.attribute('id')] = Reflex::StopPlaceEntranceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
+          when "Quay"              then quays[node.attribute('id')] = Reflex::QuayNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
         end
       end
       {
-        :stop_places          => stop_places,
-        :stop_place_entrances => stop_place_entrances,
-        :quay                 => quays
+        :StopPlace => stop_places,
+        :StopPlaceEntrance => stop_place_entrances,
+        :Quay => quays
       }
     end
 

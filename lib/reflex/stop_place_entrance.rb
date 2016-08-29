@@ -20,7 +20,8 @@ module Reflex
         :postal_code => node.at_css('PostalAddress PostalRegion').content,
         :is_exit     => node.at_css('IsExit').content,
         :is_entry    => node.at_css('IsEntry').content,
-        :location    => node.at_css('pos').content
+        :location    => node.at_css('pos').content,
+        :area_type   => 'StopPlaceEntrance'
       }
       StopPlaceEntrance.new params
     end

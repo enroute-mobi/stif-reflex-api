@@ -22,6 +22,7 @@ module Reflex
       params[:type_of_place_ref] = node.at_css('TypeOfPlaceRef').attribute('ref').to_s
       params[:type_of_place]     = node.at_css('StopPlaceType').content
       params[:xml]               = node.to_s
+      params[:area_type]         = 'StopPlace'
 
       node.css('KeyValue').each do |entry|
         params[entry.at_css('Key').content.downcase] = entry.at_css('Value').content
