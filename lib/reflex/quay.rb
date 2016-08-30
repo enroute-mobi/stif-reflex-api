@@ -1,6 +1,19 @@
 module Reflex
   class Quay
-    attr_accessor :id, :version, :name, :city, :postal_code, :location, :mobility_impaired_access
+    attr_accessor *%i[
+      id
+      version
+      created
+      changed
+      name
+      city
+      postal_code
+      location
+      mobility_impaired_access
+      area_type
+      object_status
+      xml
+    ]
 
     def initialize params
       params.each do |k,v|

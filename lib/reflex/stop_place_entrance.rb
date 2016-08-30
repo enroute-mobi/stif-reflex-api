@@ -1,6 +1,16 @@
 module Reflex
   class StopPlaceEntrance
-    attr_accessor :name, :id, :version, :city, :postal_code, :is_entry, :is_exit, :location
+    attr_accessor *%i[
+      id
+      name
+      version
+      city
+      postal_code
+      is_entry
+      is_exit
+      location
+      area_type
+    ]
 
     def initialize params
       params.each do |k,v|

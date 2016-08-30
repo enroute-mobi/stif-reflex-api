@@ -1,6 +1,21 @@
 module Reflex
   class StopPlace
-    attr_accessor :id, :version, :name, :type_of_place, :city, :postal_code
+    attr_accessor *%i[
+      id
+      version
+      object_status
+      created
+      changed
+      name
+      type_of_place
+      type_of_place_ref
+      city
+      postal_code
+      area_type
+      parent_site_ref
+      parent_site_ref_version
+      quays
+    ]
 
     def initialize params
       params.each do |k,v|
