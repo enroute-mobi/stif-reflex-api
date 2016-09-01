@@ -51,13 +51,11 @@ module Reflex
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
         case node.name
           when "StopPlace"         then stop_places[node.attribute('id')] = Reflex::StopPlaceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
-          when "StopPlaceEntrance" then stop_place_entrances[node.attribute('id')] = Reflex::StopPlaceEntranceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
           when "Quay"              then quays[node.attribute('id')] = Reflex::QuayNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
         end
       end
       {
         :StopPlace => stop_places,
-        :StopPlaceEntrance => stop_place_entrances,
         :Quay => quays
       }
     end

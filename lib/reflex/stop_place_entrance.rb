@@ -21,18 +21,19 @@ module Reflex
 
   class StopPlaceEntranceNodeHandler < Struct.new(:node)
     def process
-      node.remove_namespaces!
-      params = {
-        :id          => node.css('StopPlaceEntrance').attribute('id').to_s,
-        :version     => node.css('StopPlaceEntrance').attribute('version').to_s,
-        :name        => node.at_css('Name').content,
-        :city        => node.at_css('PostalAddress Town').content,
-        :postal_code => node.at_css('PostalAddress PostalRegion').content,
-        :is_exit     => node.at_css('IsExit').content,
-        :is_entry    => node.at_css('IsEntry').content,
-        :location    => node.at_css('pos').content,
-        :area_type   => 'StopPlaceEntrance'
-      }
+      params = {}
+      [:id, :version].each do |attr|
+        params[attr] = node.attribute(attr.to_s).to_s
+      end
+
+      params[:name]        = node.at_css('Name').content
+      params[:city]        = node.at_css('PostalAddress Town').content
+      params[:postal_code] = node.at_css('PostalAddress PostalRegion').content
+      params[:is_exit]     = node.at_css('IsExit').content
+      params[:is_entry]    = node.at_css('IsEntry').content
+      params[:location]    = node.at_css('pos').content
+      params[:area_type]   = 'StopPlaceEntrance'
+
       StopPlaceEntrance.new params
     end
   end

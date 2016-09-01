@@ -42,7 +42,6 @@ describe Reflex do
 
     it 'should return results on valid request' do
       expect(process_results[:Quay].count).to eq 6784
-      expect(process_results[:StopPlaceEntrance].count).to eq 60
       expect(process_results[:StopPlace].count).to eq 1144
     end
   end
