@@ -1,6 +1,6 @@
-# Codifligne
+# Reflex
 Work in progress :
-An API wrapper for Stif Codifligne API
+An API wrapper for Stif Reflex API
 
 # Dependencies
 Ruby >= 2.1.0
@@ -8,40 +8,34 @@ Ruby >= 2.1.0
 # Install
 Build
 ```ruby
-git clone git@github.com:AF83/stif-codifline-api.git
-cd stif-codifline-api
-gem build codifligne.gemspec
-gem install -l codifligne-0.0.1.gem
+git clone git@github.com:AF83/stif-reflex-api.git
+cd stif-reflex-api
+gem build Reflex.gemspec
+gem install -l Reflex-0.0.1.gem
 ```
 
 Add to your project
 ```ruby
-gem 'codifligne'
+gem 'Reflex'
 bundle install
 ```
 
 Usage
 ```ruby
-# Retrieve all operators
-client    = Codifligne::API.new
-operators = client.operators
 
-# Retrieve operators by transport_mode
-operators = client.operators(transport_mode: 'fer')
-
-# Retrieve all line  by operator name
-lines = client.lines(operator_name: 'ADP')
+client  = Reflex::API.new
+results = client.process 'getOP'
 ```
 
-You can set timeout and override api base url globally in your config/initializers/codifligne.rb
+You can set timeout and override api base url globally in your config/initializers/Reflex.rb
 ```ruby
-Codifligne::API.base_url = "https://codifligne.stif.info/rest/v1/lc/getlist"
-Codifligne::API.timeout  = 50
+Reflex::API.base_url = "https://reflex.stif.info/ws/reflex/V1/service=getData"
+Reflex::API.timeout  = 50
 ```
 
 
 # Tests
 ```ruby
-cd stif-codifline-api
-rspec spec/codifligne
+cd stif-reflex-api
+rspec spec/Reflex
 ```
