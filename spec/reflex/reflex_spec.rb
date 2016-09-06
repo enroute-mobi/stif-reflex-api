@@ -31,18 +31,18 @@ describe Reflex do
     before(:each) do
       ['getOR', 'getOP'].each do |name|
         stub_request(:get, "#{api_url}&method=#{name}").
-        to_return(body: File.open("#{fixture_path}/#{name.downcase}.zip"), status: 200)
+        to_return(body: File.open("#{fixture_path}/reflex.zip"), status: 200)
       end
     end
 
     it 'request should be successfull' do
-      file = client.api_request(method: 'getOR')
-      expect(file).to be_a Tempfile
+      response = client.api_request(method: 'getOR')
+      expect(response).to be_a Tempfile
     end
 
     it 'should return results on valid request' do
-      expect(process_results[:Quay].count).to eq 6784
-      expect(process_results[:StopPlace].count).to eq 1144
+      expect(process_results[:Quay].count).to eq 2
+      expect(process_results[:StopPlace].count).to eq 4
     end
   end
 end

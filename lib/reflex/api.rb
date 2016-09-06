@@ -25,7 +25,14 @@ module Reflex
       raise Reflex::ReflexError, "No method specified" if params[:method].nil?
       url = build_url(params)
       begin
-        open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
+        result = open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
+        if result.is_a? StringIO
+          tmpfile = Tempfile.new("file")
+          tmpfile.binmode
+          tmpfile.write(result.read)
+          tmpfile.close
+        end
+        tmpfile
       rescue Exception => e
         raise Reflex::ReflexError, "#{e.message} for request : #{url}."
       end
@@ -33,7 +40,7 @@ module Reflex
 
     def parse_response zipfile
       begin
-        file   = Zip::File.open(zipfile).first.get_input_stream.read
+        file   = Zip::File.open(zipfile.path).first.get_input_stream.read
         reader = Nokogiri::XML::Reader(file)
       rescue Exception => e
         raise Reflex::ReflexError, e.message
