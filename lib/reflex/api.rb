@@ -26,12 +26,12 @@ module Reflex
       url = build_url(params)
       begin
         result = open(url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE, :read_timeout => @timeout)
-        if result.is_a? StringIO
-          tmpfile = Tempfile.new("file")
-          tmpfile.binmode
-          tmpfile.write(result.read)
-          tmpfile.close
-        end
+        return result unless result.is_a? StringIO
+
+        tmpfile = Tempfile.new("file")
+        tmpfile.binmode
+        tmpfile.write(result.read)
+        tmpfile.close
         tmpfile
       rescue Exception => e
         raise Reflex::ReflexError, "#{e.message} for request : #{url}."
