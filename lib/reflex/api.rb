@@ -2,7 +2,7 @@ module Reflex
   class API
     DEFAULT_TIMEOUT  = 30
     DEFAULT_FORMAT   = 'xml'
-    DEFAULT_BASE_URL = "https://reflex.stif.info/ws/reflex/V1/service=getData"
+    DEFAULT_BASE_URL = "https://195.46.215.128/ws/reflex/V1/service=getData"
 
     attr_accessor :timeout, :format, :base_url
 
