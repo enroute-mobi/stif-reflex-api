@@ -10,6 +10,7 @@ module Reflex
       is_exit
       location
       area_type
+      access_type
     ]
 
     def initialize params
@@ -20,6 +21,18 @@ module Reflex
   end
 
   class StopPlaceEntranceNodeHandler < Struct.new(:node)
+
+
+    def access_type params
+      if params[:is_entry] == 'true' && params[:is_exit] == 'true'
+        'in_out'
+      elsif params[:is_entry] == 'true'
+        'in'
+      elsif params[:is_exit] == 'true'
+        'out'
+      end
+    end
+
     def process
       params = {}
       [:id, :version].each do |attr|
@@ -33,6 +46,7 @@ module Reflex
       params[:is_entry]    = node.at_css('IsEntry').content
       params[:location]    = node.at_css('pos').content
       params[:area_type]   = 'StopPlaceEntrance'
+      params[:access_type] = self.access_type params
 
       StopPlaceEntrance.new params
     end

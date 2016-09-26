@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Reflex do
   let(:client)  { Reflex::API.new }
-  let(:api_url) { "https://reflex.stif.info/ws/reflex/V1/service=getData/?format=xml&idRefa=0" }
+  let(:api_url) { "https://195.46.215.128/ws/reflex/V1/service=getData/?format=xml&idRefa=0" }
 
   it 'should have a version number' do
     expect(Reflex::VERSION).not_to be nil

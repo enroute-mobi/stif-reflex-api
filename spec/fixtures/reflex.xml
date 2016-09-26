@@ -117,7 +117,7 @@
           <PostalRegion>91421</PostalRegion>
          </PostalAddress>
          <IsEntry>true</IsEntry>
-         <IsExit>true</IsExit>
+         <IsExit>false</IsExit>
         </StopPlaceEntrance>
        </entrances>
        <StopPlaceType>onstreetBus</StopPlaceType>
