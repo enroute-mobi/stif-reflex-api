@@ -16,6 +16,7 @@ module Reflex
       parent_site_ref_version
       entrances
       quays
+      xml
     ]
 
     def initialize params
