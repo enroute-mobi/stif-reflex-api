@@ -1,65 +1,44 @@
 module Reflex
-  class StopPlace
-    attr_accessor *%i[
-      id
-      version
-      object_status
-      created
-      changed
-      name
-      type_of_place
-      type_of_place_ref
-      city
-      postal_code
-      area_type
-      parent_site_ref
-      parent_site_ref_version
-      entrances
-      quays
-      xml
-    ]
+  class StopPlaceNodeHandler < Nokogiri::XML::SAX::Document
+    def start_document
+      @stop_place = {}
+      @text_stack = []
+      @is_entrance = false
+      @stop_place_entrances = []
+    end
 
-    def initialize params
-      params.each do |k,v|
-        instance_variable_set("@#{k}", v) unless v.nil?
+    def store_object_status
+      @stop_place[@stop_place['Key']] = @stop_place['Value'] if @stop_place[@stop_place['Key']]
+    end
+
+    def end_document
+      self.store_object_status
+      @stop_place[:stop_place_entrances] = @stop_place_entrances
+      API.stop_places << @stop_place
+    end
+
+    def start_element(name, attrs = [])
+      @stop_place           = Hash[attrs]        if name == 'StopPlace'
+      @stop_place['type']   = Hash[attrs]['ref'] if name == 'TypeOfPlaceRef'
+      @stop_place['parent'] = Hash[attrs]['ref'] if name == 'ParentSiteRef'
+      if name == 'StopPlaceEntrance'
+        @is_entrance = true
+        @stop_place_entrances << Hash[attrs]
       end
     end
-  end
 
-  class StopPlaceNodeHandler < Struct.new(:node)
-    def process
-      node.remove_namespaces!
-      params = {}
-      [:id, :version, :created, :changed].each do |attr|
-        params[attr] = node.css('StopPlace').attribute(attr.to_s).to_s
+    def end_element(name)
+      if @is_entrance
+        @stop_place_entrances.last[name] = @text_stack.pop if @text_stack.last
+      else
+        @stop_place[name] = @text_stack.pop if !@stop_place[name] && @text_stack.last
       end
+      @is_entrance = false if name == 'StopPlaceEntrance'
+    end
 
-      params[:name]              = node.at_css('Name').content
-      params[:city]              = node.at_css('Town').content
-      params[:postal_code]       = node.at_css('PostalRegion').content
-      params[:type_of_place_ref] = node.at_css('TypeOfPlaceRef').attribute('ref').to_s
-      params[:type_of_place]     = node.at_css('StopPlaceType').content
-      params[:xml]               = node.to_s
-      params[:area_type]         = 'StopPlace'
-
-      node.css('KeyValue').each do |entry|
-        params[entry.at_css('Key').content.downcase] = entry.at_css('Value').content
-      end
-      params[:quays] = node.css('QuayRef').map do |quay|
-        {
-          ref: quay.attribute('ref').to_s,
-          version: quay.attribute('version').to_s
-        }
-      end
-      params[:entrances] = node.css('StopPlaceEntrance').map do |entrance|
-        Reflex::StopPlaceEntranceNodeHandler.new(entrance).process
-      end
-      if node.at_css('ParentSiteRef')
-        params[:parent_site_ref]         = node.at_css('ParentSiteRef').attribute('ref').to_s
-        params[:parent_site_ref_version] = node.at_css('ParentSiteRef').attribute('version').to_s
-      end
-
-      StopPlace.new params
+    def characters(string)
+      data = string.gsub("\n", '').strip
+      @text_stack << data unless data.empty?
     end
   end
 end

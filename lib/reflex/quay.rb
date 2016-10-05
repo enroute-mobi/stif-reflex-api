@@ -1,46 +1,27 @@
 module Reflex
-  class Quay
-    attr_accessor *%i[
-      id
-      version
-      created
-      changed
-      name
-      city
-      postal_code
-      location
-      mobility_impaired_access
-      area_type
-      object_status
-      xml
-    ]
-
-    def initialize params
-      params.each do |k,v|
-        instance_variable_set("@#{k}", v) unless v.nil?
-      end
+  class QuayNodeHandler < Nokogiri::XML::SAX::Document
+    def start_document
+      @quay = {}
+      @text_stack = []
     end
-  end
 
-  class QuayNodeHandler < Struct.new(:node)
-    def process
-      node.remove_namespaces!
-      params = {}
-      [:id, :version, :created, :changed].each do |attr|
-        params[attr] = node.css('Quay').attribute(attr.to_s).to_s
-      end
-      params[:name]                     = node.at_css('Name').content
-      params[:city]                     = node.at_css('Town').content
-      params[:postal_code]              = node.at_css('PostalRegion').content
-      params[:mobility_impaired_access] = node.at_css('MobilityImpairedAccess').content
-      params[:xml]                      = node.to_s
-      params[:area_type]                = 'Quay'
+    def end_document
+      # OBJECT_STATUS
+      @quay[@quay['Key']] = @quay['Value']
+      API.quays << @quay
+    end
 
-      node.css('KeyValue').each do |entry|
-        params[entry.at_css('Key').content.downcase] = entry.at_css('Value').content
-      end
+    def start_element(name, attrs = [])
+      @quay = Hash[attrs] if name == 'Quay'
+    end
 
-      Quay.new params
+    def end_element(name)
+      @quay[name] = @text_stack.pop if @text_stack.last && !@quay[name]
+    end
+
+    def characters(string)
+      data = string.gsub("\n", '').strip
+      @text_stack << data unless data.empty?
     end
   end
 end

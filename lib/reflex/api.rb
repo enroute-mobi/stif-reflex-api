@@ -3,6 +3,8 @@ module Reflex
     DEFAULT_TIMEOUT  = 30
     DEFAULT_FORMAT   = 'xml'
     DEFAULT_BASE_URL = "https://195.46.215.128/ws/reflex/V1/service=getData"
+    @quays       = []
+    @stop_places = []
 
     attr_accessor :timeout, :format, :base_url
 
@@ -47,28 +49,40 @@ module Reflex
       end
     end
 
+    def reset_processed
+      self.class.stop_places = []
+      self.class.quays = []
+    end
+
     def process method
       zipfile    = self.api_request(method: method)
       reader     = self.parse_response zipfile
 
-      stop_places          = {}
-      stop_place_entrances = {}
-      quays                = {}
       reader.each do |node|
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
-        case node.name
-          when "StopPlace"         then stop_places[node.attribute('id')] = Reflex::StopPlaceNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
-          when "Quay"              then quays[node.attribute('id')] = Reflex::QuayNodeHandler.new(Nokogiri::XML(node.outer_xml)).process
+        next unless ['StopPlace', 'Quay'].include?(node.name)
+
+        xml = node.outer_xml
+        if node.name == 'StopPlace'
+          Nokogiri::XML::SAX::Parser.new(StopPlaceNodeHandler.new).parse(xml)
+          self.class.stop_places.last[:xml] = xml
+        end
+
+        if node.name == 'Quay'
+          Nokogiri::XML::SAX::Parser.new(QuayNodeHandler.new).parse(xml)
+          self.class.quays.last[:xml] = xml
         end
       end
-      {
-        :StopPlace => stop_places,
-        :Quay => quays
+      results = {
+        :StopPlace => self.class.stop_places,
+        :Quay      => self.class.quays
       }
+      self.reset_processed
+      results
     end
 
     class << self
-      attr_accessor :timeout, :format, :base_url
+      attr_accessor :timeout, :format, :base_url, :quays, :stop_places
     end
   end
 end
