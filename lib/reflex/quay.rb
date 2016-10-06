@@ -8,11 +8,13 @@ module Reflex
     def end_document
       # OBJECT_STATUS
       @quay[@quay['Key']] = @quay['Value']
+      @quay['type'] = 'Quay'
       API.quays << @quay
     end
 
     def start_element(name, attrs = [])
       @quay = Hash[attrs] if name == 'Quay'
+      @current_node = name
     end
 
     def end_element(name)
@@ -20,8 +22,8 @@ module Reflex
     end
 
     def characters(string)
-      data = string.gsub("\n", '').strip
-      @text_stack << data unless data.empty?
+      string = string.gsub("\n", '').strip
+      @quay[@current_node] = @quay[@current_node].to_s + string unless string.empty?
     end
   end
 end

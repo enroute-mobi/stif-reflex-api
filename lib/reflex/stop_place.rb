@@ -13,14 +13,15 @@ module Reflex
 
     def end_document
       self.store_object_status
+      @stop_place['type'] = 'StopPlace'
       @stop_place[:stop_place_entrances] = @stop_place_entrances
       API.stop_places << @stop_place
     end
 
     def start_element(name, attrs = [])
       @stop_place           = Hash[attrs]        if name == 'StopPlace'
-      @stop_place['type']   = Hash[attrs]['ref'] if name == 'TypeOfPlaceRef'
       @stop_place['parent'] = Hash[attrs]['ref'] if name == 'ParentSiteRef'
+      @current_node = name
       if name == 'QuayRef'
         @stop_place['quays'] ||= []
         @stop_place['quays'] << Hash[attrs]['ref']
@@ -32,18 +33,19 @@ module Reflex
       end
     end
 
-    def end_element(name)
+    def characters(string)
+      string = string.gsub("\n", '').strip
+      return if string.empty?
+
       if @is_entrance
-        @stop_place_entrances.last[name] = @text_stack.pop if @text_stack.last
+        @stop_place_entrances.last[@current_node] = @stop_place_entrances.last[@current_node].to_s + string
       else
-        @stop_place[name] = @text_stack.pop if !@stop_place[name] && @text_stack.last
+        @stop_place[@current_node] = @stop_place[@current_node].to_s + string
       end
-      @is_entrance = false if name == 'StopPlaceEntrance'
     end
 
-    def characters(string)
-      data = string.gsub("\n", '').strip
-      @text_stack << data unless data.empty?
+    def end_element(name)
+      @is_entrance = false if name == 'StopPlaceEntrance'
     end
   end
 end
