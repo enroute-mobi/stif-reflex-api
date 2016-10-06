@@ -21,6 +21,11 @@ module Reflex
       @stop_place           = Hash[attrs]        if name == 'StopPlace'
       @stop_place['type']   = Hash[attrs]['ref'] if name == 'TypeOfPlaceRef'
       @stop_place['parent'] = Hash[attrs]['ref'] if name == 'ParentSiteRef'
+      if name == 'QuayRef'
+        @stop_place['quays'] ||= []
+        @stop_place['quays'] << Hash[attrs]['ref']
+      end
+
       if name == 'StopPlaceEntrance'
         @is_entrance = true
         @stop_place_entrances << Hash[attrs]

@@ -123,6 +123,7 @@
        <StopPlaceType>onstreetBus</StopPlaceType>
        <quays>
         <QuayRef ref="FR:77153:ZDE:38240:STIF" version="782150"/>
+        <QuayRef ref="FR:77153:ZDE:38241:STIF" version="782151"/>
        </quays>
       </StopPlace>
 
