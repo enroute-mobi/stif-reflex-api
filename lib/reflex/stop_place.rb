@@ -21,12 +21,13 @@ module Reflex
     def start_element(name, attrs = [])
       @stop_place           = Hash[attrs]        if name == 'StopPlace'
       @stop_place['parent'] = Hash[attrs]['ref'] if name == 'ParentSiteRef'
+      @stop_place[name]     = Hash[attrs]['ref'] if name == 'TypeOfPlaceRef'
+
       @current_node = name
       if name == 'QuayRef'
         @stop_place['quays'] ||= []
         @stop_place['quays'] << Hash[attrs]['ref']
       end
-
       if name == 'StopPlaceEntrance'
         @is_entrance = true
         @stop_place_entrances << Hash[attrs]
