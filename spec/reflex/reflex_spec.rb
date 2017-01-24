@@ -40,6 +40,11 @@ describe Reflex do
       expect(response).to be_a Tempfile
     end
 
+    it 'should retrieve town and postal address' do
+      expect(process_results[:Quay].first['Town']).to eq('Abloné-sur-Seine')
+      expect(process_results[:StopPlace].first['Town']).to eq('Dammartin-en-Goële')
+    end
+
     it 'should return results on valid request' do
       expect(process_results[:Quay].count).to eq 2
       expect(process_results[:StopPlace].count).to eq 4

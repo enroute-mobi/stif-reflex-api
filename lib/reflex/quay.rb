@@ -1,14 +1,14 @@
 module Reflex
   class QuayNodeHandler < Nokogiri::XML::SAX::Document
     def start_document
-      @quay = {}
-      @text_stack = []
+      @quay          = {}
+      @text_stack    = []
+      @previous_node = nil
     end
 
     def end_document
-      # OBJECT_STATUS
-      @quay[@quay['Key']] = @quay['Value']
       @quay['type'] = 'Quay'
+      @quay.delete_if { |k, v| v.nil? }
       API.quays << @quay
     end
 
@@ -18,12 +18,25 @@ module Reflex
     end
 
     def end_element(name)
-      @quay[name] = @text_stack.pop if @text_stack.last && !@quay[name]
+      string = @text_stack.join
+      @text_stack = []
+      return if string.empty?
+
+      if @previous_node == 'Key' && name == 'Value'
+        return @quay[@quay.keys.last] = string
+      end
+
+      if name == 'Key'
+        @previous_node = name
+        @quay[string] = nil
+      else
+        @quay[name] = @quay[name].to_s + string
+      end
     end
 
     def characters(string)
       string = string.gsub("\n", '').strip
-      @quay[@current_node] = @quay[@current_node].to_s + string unless string.empty?
+      @text_stack << string unless string.empty?
     end
   end
 end

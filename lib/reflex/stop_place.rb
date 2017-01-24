@@ -2,7 +2,6 @@ module Reflex
   class StopPlaceNodeHandler < Nokogiri::XML::SAX::Document
     def start_document
       @stop_place = {}
-      @text_stack = []
       @is_entrance = false
       @stop_place_entrances = []
     end
