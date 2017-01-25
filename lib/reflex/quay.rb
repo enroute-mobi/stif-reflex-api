@@ -4,10 +4,12 @@ module Reflex
       @quay          = {}
       @text_stack    = []
       @previous_node = nil
+      @lamber        = LamberWilson.new
     end
 
     def end_document
-      @quay['type'] = 'Quay'
+      @quay['type']    = 'Quay'
+      @quay['gml:pos'] = @lamber.to_longlat(@quay['gml:pos'])
       @quay.delete_if { |k, v| v.nil? }
       API.quays << @quay
     end

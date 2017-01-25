@@ -8,7 +8,7 @@ describe Reflex do
     expect(Reflex::VERSION).not_to be nil
   end
 
- it 'should have a default timeout value' do
+  it 'should have a default timeout value' do
     expect(client.timeout).to equal(30)
   end
 
@@ -40,14 +40,39 @@ describe Reflex do
       expect(response).to be_a Tempfile
     end
 
+    it 'should return results on valid request' do
+      expect(process_results[:Quay].count).to eq 2
+      expect(process_results[:StopPlace].count).to eq 4
+    end
+
     it 'should retrieve town and postal address' do
       expect(process_results[:Quay].first['Town']).to eq('Abloné-sur-Seine')
       expect(process_results[:StopPlace].first['Town']).to eq('Dammartin-en-Goële')
     end
 
-    it 'should return results on valid request' do
-      expect(process_results[:Quay].count).to eq 2
-      expect(process_results[:StopPlace].count).to eq 4
+    it 'should retrieve long lat of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['gml:pos'][:lng]).to eq(2.4188263089316813)
+        expect(quay['gml:pos'][:lat]).to eq(48.7276875270213)
+      end
+    end
+  end
+
+  context 'lamber wilson' do
+    let(:client)  { Reflex::LamberWilson.new }
+
+    it 'should convert lamber93 point to wgs84 point' do
+      cord  = [650045.098, 6857815.614]
+      point = client.to_longlat(cord)
+      expect(point[:lng]).to eq(2.3196613994745)
+      expect(point[:lat]).to eq(48.81846921123397)
+    end
+
+    it 'should accept string cord as parameters' do
+      cord  = '650045.098 6857815.614'
+      point = client.to_longlat(cord)
+      expect(point[:lng]).to eq(2.3196613994745)
+      expect(point[:lat]).to eq(48.81846921123397)
     end
   end
 end

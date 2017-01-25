@@ -1,17 +1,14 @@
 module Reflex
   class StopPlaceNodeHandler < Nokogiri::XML::SAX::Document
     def start_document
-      @stop_place = {}
-      @is_entrance = false
+      @stop_place           = {}
+      @is_entrance          = false
       @stop_place_entrances = []
-    end
-
-    def store_object_status
-      @stop_place[@stop_place['Key']] = @stop_place['Value'] if @stop_place[@stop_place['Key']]
+      @lamber        = LamberWilson.new
     end
 
     def end_document
-      self.store_object_status
+      @stop_place_entrances.map {|spe| spe['gml:pos'] = @lamber.to_longlat(spe['gml:pos']) }
       @stop_place['type'] = 'StopPlace'
       @stop_place[:stop_place_entrances] = @stop_place_entrances
       API.stop_places << @stop_place
