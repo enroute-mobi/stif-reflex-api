@@ -16,7 +16,6 @@ module Reflex
 
     def start_element(name, attrs = [])
       @quay = Hash[attrs] if name == 'Quay'
-      @current_node = name
     end
 
     def end_element(name)

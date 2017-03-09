@@ -4,7 +4,9 @@ module Reflex
       @stop_place           = {}
       @is_entrance          = false
       @stop_place_entrances = []
-      @lamber        = LamberWilson.new
+      @text_stack           = []
+      @previous_node        = nil
+      @lamber               = LamberWilson.new
     end
 
     def end_document
@@ -19,7 +21,6 @@ module Reflex
       @stop_place['parent'] = Hash[attrs]['ref'] if name == 'ParentSiteRef'
       @stop_place[name]     = Hash[attrs]['ref'] if name == 'TypeOfPlaceRef'
 
-      @current_node = name
       if name == 'QuayRef'
         @stop_place['quays'] ||= []
         @stop_place['quays'] << Hash[attrs]['ref']
@@ -32,17 +33,30 @@ module Reflex
 
     def characters(string)
       string = string.gsub("\n", '').strip
-      return if string.empty?
-
-      if @is_entrance
-        @stop_place_entrances.last[@current_node] = @stop_place_entrances.last[@current_node].to_s + string
-      else
-        @stop_place[@current_node] = @stop_place[@current_node].to_s + string
-      end
+      @text_stack << string unless string.empty?
     end
 
     def end_element(name)
       @is_entrance = false if name == 'StopPlaceEntrance'
+
+      string = @text_stack.join
+      @text_stack = []
+      return if string.empty?
+
+      if @previous_node == 'Key' && name == 'Value'
+        return @stop_place[@stop_place.keys.last] = string
+      end
+
+      if name == 'Key'
+        @previous_node = name
+        @stop_place[string] = nil
+      else
+        if @is_entrance
+          @stop_place_entrances.last[name] = @stop_place_entrances.last[name].to_s + string
+        else
+          @stop_place[name] = @stop_place[name].to_s + string
+        end
+      end
     end
   end
 end
