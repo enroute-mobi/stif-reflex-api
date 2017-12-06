@@ -2,6 +2,7 @@ require "open-uri"
 require "nokogiri"
 require "zip"
 require "rgeo"
+require "filemagic"
 
 require "reflex/api"
 require "reflex/reflex_error"

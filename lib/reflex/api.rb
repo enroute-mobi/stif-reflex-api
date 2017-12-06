@@ -40,9 +40,8 @@ module Reflex
       end
     end
 
-    def parse_response zipfile
+    def parse_response file
       begin
-        file   = Zip::File.open(zipfile.path).first.get_input_stream.read
         reader = Nokogiri::XML::Reader(file)
       rescue Exception => e
         raise Reflex::ReflexError, e.message
@@ -55,8 +54,19 @@ module Reflex
     end
 
     def process method
-      zipfile    = self.api_request(method: method)
-      reader     = self.parse_response zipfile
+      self.process_with_params(method: method)
+    end
+
+    def process_with_params params
+      apifile = self.api_request params
+
+      type = FileMagic.new(:mime_type).file(apifile.path)
+      if type == "text/xml"
+        file = File.open(apifile.path, "r")
+        reader =  self.parse_response(file)
+      else
+        reader  = self.parse_response(Zip::File.open(apifile.path).first.get_input_stream.read)
+      end
 
       reader.each do |node|
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
@@ -79,6 +89,8 @@ module Reflex
       }
       self.reset_processed
       results
+    ensure
+      file.close unless file.nil?
     end
 
     class << self

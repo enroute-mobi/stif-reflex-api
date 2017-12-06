@@ -4,6 +4,7 @@ An API wrapper for Stif Reflex API
 
 # Dependencies
 Ruby >= 2.1.0
+Libmagic
 
 # Install
 Build

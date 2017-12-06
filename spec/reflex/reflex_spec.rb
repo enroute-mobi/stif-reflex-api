@@ -56,6 +56,14 @@ describe Reflex do
         expect(quay['gml:pos'][:lat]).to eq(48.7276875270213)
       end
     end
+
+    it 'should handle non zip files' do
+      stub_request(:get, "#{api_url}&method=getOR").
+      to_return(body: File.open("#{fixture_path}/reflex.xml"), status: 200)
+
+      expect(process_results[:Quay].count).to eq 2
+      expect(process_results[:StopPlace].count).to eq 4
+    end
   end
 
   context 'lamber wilson' do
@@ -65,14 +73,14 @@ describe Reflex do
       cord  = [650045.098, 6857815.614]
       point = client.to_longlat(cord)
       expect(point[:lng]).to eq(2.3196613994745)
-      expect(point[:lat]).to eq(48.81846921123397)
+      expect(point[:lat]).to eq(48.81846921123396)
     end
 
     it 'should accept string cord as parameters' do
       cord  = '650045.098 6857815.614'
       point = client.to_longlat(cord)
       expect(point[:lng]).to eq(2.3196613994745)
-      expect(point[:lat]).to eq(48.81846921123397)
+      expect(point[:lat]).to eq(48.81846921123396)
     end
   end
 end
