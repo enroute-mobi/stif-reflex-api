@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe Reflex do
@@ -72,15 +73,15 @@ describe Reflex do
     it 'should convert lamber93 point to wgs84 point' do
       cord  = [650045.098, 6857815.614]
       point = client.to_longlat(cord)
-      expect(point[:lng]).to eq(2.3196613994745)
-      expect(point[:lat]).to eq(48.81846921123396)
+      expect(point[:lng]).to be_within(0.000001).of(2.3196613994745)
+      expect(point[:lat]).to be_within(0.000001).of(48.81846921123396)
     end
 
     it 'should accept string cord as parameters' do
       cord  = '650045.098 6857815.614'
       point = client.to_longlat(cord)
-      expect(point[:lng]).to eq(2.3196613994745)
-      expect(point[:lat]).to eq(48.81846921123396)
+      expect(point[:lng]).to be_within(0.000001).of(2.3196613994745)
+      expect(point[:lat]).to be_within(0.000001).of(48.81846921123396)
     end
   end
 end
