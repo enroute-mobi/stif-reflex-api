@@ -61,7 +61,7 @@ module Reflex
       apifile = self.api_request params
 
       type = FileMagic.new(:mime_type).file(apifile.path)
-      if type == "text/xml"
+      if %w{text/xml application/xml}.include? type
         file = File.open(apifile.path, "r")
         reader =  self.parse_response(file)
       else
