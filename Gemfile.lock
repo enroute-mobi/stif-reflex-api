@@ -15,7 +15,7 @@ GEM
     diff-lcs (1.2.5)
     hashdiff (0.2.3)
     mini_portile2 (2.3.0)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     rake (10.5.0)
     rgeo (0.5.3)
@@ -54,4 +54,4 @@ DEPENDENCIES
   webmock (~> 1.22.6)
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
