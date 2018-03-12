@@ -9,7 +9,7 @@ Libmagic
 # Install
 Build
 ```ruby
-git clone git@github.com:AF83/stif-reflex-api.git
+git clone git@github.com:af83/stif-reflex-api.git
 cd stif-reflex-api
 gem build Reflex.gemspec
 gem install -l Reflex-0.0.1.gem
@@ -33,7 +33,6 @@ You can set timeout and override api base url globally in your config/initialize
 Reflex::API.base_url = "https://reflex.stif.info/ws/reflex/V1/service=getData"
 Reflex::API.timeout  = 50
 ```
-
 
 # Tests
 ```ruby
