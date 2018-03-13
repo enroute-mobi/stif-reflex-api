@@ -33,7 +33,7 @@ GEM
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
     ruby-filemagic (0.7.2)
-    rubyzip (1.1.7)
+    rubyzip (1.2.1)
     safe_yaml (1.0.4)
     webmock (1.22.6)
       addressable (>= 2.3.6)
@@ -50,7 +50,7 @@ DEPENDENCIES
   reflex!
   rgeo (~> 0.5.2)
   rspec (~> 3.4)
-  rubyzip (~> 1.1.7)
+  rubyzip (~> 1.2.1)
   webmock (~> 1.22.6)
 
 BUNDLED WITH
