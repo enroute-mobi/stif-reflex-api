@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "webmock", "~> 1.22"
   s.add_development_dependency "rspec", '~> 3.4'
-  s.add_development_dependency "rubyzip", '~> 1.1.7'
+  s.add_development_dependency "rubyzip", '~> 1.2.1'
   s.add_development_dependency "rgeo", '~> 0.5.2'
 end
