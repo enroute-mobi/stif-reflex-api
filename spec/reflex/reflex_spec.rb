@@ -53,8 +53,8 @@ describe Reflex do
 
     it 'should retrieve long lat of quay' do
       process_results[:Quay].first.tap do |quay|
-        expect(quay['gml:pos'][:lng]).to eq(2.4188263089316813)
-        expect(quay['gml:pos'][:lat]).to eq(48.7276875270213)
+        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.418826)
+        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.727687)
       end
     end
 
@@ -73,15 +73,15 @@ describe Reflex do
     it 'should convert lamber93 point to wgs84 point' do
       cord  = [650045.098, 6857815.614]
       point = client.to_longlat(cord)
-      expect(point[:lng]).to be_within(0.000001).of(2.3196613994745)
-      expect(point[:lat]).to be_within(0.000001).of(48.81846921123396)
+      expect(point[:lng]).to be_within(0.000001).of(2.319661)
+      expect(point[:lat]).to be_within(0.000001).of(48.818469)
     end
 
     it 'should accept string cord as parameters' do
       cord  = '650045.098 6857815.614'
       point = client.to_longlat(cord)
-      expect(point[:lng]).to be_within(0.000001).of(2.3196613994745)
-      expect(point[:lat]).to be_within(0.000001).of(48.81846921123396)
+      expect(point[:lng]).to be_within(0.000001).of(2.319661)
+      expect(point[:lat]).to be_within(0.000001).of(48.818469)
     end
   end
 end
