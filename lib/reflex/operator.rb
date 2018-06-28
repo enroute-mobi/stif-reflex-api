@@ -24,7 +24,7 @@ module Reflex
       return if string.empty?
 
       if name == 'Name'
-        @operator[:name] = string
+        @operator['name'] = string
       end
     end
   end
