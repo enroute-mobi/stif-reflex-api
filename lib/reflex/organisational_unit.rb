@@ -1,16 +1,17 @@
 module Reflex
-  class OperatorNodeHandler < Nokogiri::XML::SAX::Document
+  class OrganisationalUnitNodeHandler < Nokogiri::XML::SAX::Document
     def start_document
-      @operator = {}
+      @organisational_unit = {}
       @text_stack = []
     end
 
     def end_document
-      API.operators << @operator
+      API.organisational_units << @organisational_unit
     end
 
     def start_element(name, attrs = [])
-      @operator = Hash[attrs] if name == 'Operator'
+      @organisational_unit = Hash[attrs] if name == 'OrganisationalUnit'
+      @organisational_unit['type_of_organisation'] = Hash[attrs]['ref'] if name == 'TypeOfOrganisationPartRef'
     end
 
     def characters(string)
@@ -24,7 +25,7 @@ module Reflex
       return if string.empty?
 
       if name == 'Name'
-        @operator['name'] = string
+        @organisational_unit['name'] = string
       end
     end
   end

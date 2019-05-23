@@ -43,18 +43,44 @@ describe Reflex do
 
     it 'should return results on valid request' do
       expect(process_results[:Quay].count).to eq 2
-      expect(process_results[:StopPlace].count).to eq 4
+      expect(process_results[:StopPlace].count).to eq 2
+      expect(process_results[:OrganisationalUnit].count).to eq 1
     end
 
-    it 'should retrieve town and postal address' do
-      expect(process_results[:Quay].first['Town']).to eq('Abloné-sur-Seine')
-      expect(process_results[:StopPlace].first['Town']).to eq('Dammartin-en-Goële')
+    it 'should retrieve type_of_organisation of organisational unit' do
+      expect(process_results[:OrganisationalUnit].first['type_of_organisation']).to eq('FR1-ARRET_Organisation')
     end
 
     it 'should retrieve long lat of quay' do
       process_results[:Quay].first.tap do |quay|
-        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.418826)
-        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.727687)
+        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.5187845)
+        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.9132038)
+      end
+    end
+
+    it 'should retrieve town and postal address' do
+      expect(process_results[:Quay].first['Town']).to eq('Livry-Gargan')
+      expect(process_results[:StopPlace].first['Town']).to eq('Livry-Gargan')
+    end
+
+    it 'should retrieve long lat of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.5187845)
+        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.9132038)
+      end
+    end
+
+    it 'should retrieve the destinations of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['destinations'].size).to eq 1
+        expect(quay['destinations'].first['Name']).to eq '234'
+      end
+    end
+
+    it 'should retrieve the tariff zones of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['tariff_zones'].size).to eq 1
+        expect(quay['tariff_zones'].first).to eq 'FR1:TariffZone:4:LOC'
       end
     end
 
@@ -63,7 +89,7 @@ describe Reflex do
       to_return(body: File.open("#{fixture_path}/reflex.xml"), status: 200)
 
       expect(process_results[:Quay].count).to eq 2
-      expect(process_results[:StopPlace].count).to eq 4
+      expect(process_results[:StopPlace].count).to eq 2
     end
   end
 

@@ -5,7 +5,7 @@ module Reflex
     DEFAULT_BASE_URL = "https://195.46.215.128/ws/reflex/V1/service=getData"
     @quays       = []
     @stop_places = []
-    @operators = []
+    @organisational_units = []
 
     attr_accessor :timeout, :format, :base_url
 
@@ -52,7 +52,7 @@ module Reflex
     def reset_processed
       self.class.stop_places = []
       self.class.quays = []
-      self.class.operators = []
+      self.class.organisational_units = []
     end
 
     def process method
@@ -72,7 +72,7 @@ module Reflex
 
       reader.each do |node|
         next unless node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
-        next unless ['StopPlace', 'Quay', 'Operator'].include?(node.name)
+        next unless ['StopPlace', 'Quay', 'OrganisationalUnit'].include?(node.name)
 
         xml = node.outer_xml
         if node.name == 'StopPlace'
@@ -85,15 +85,15 @@ module Reflex
           self.class.quays.last[:xml] = xml
         end
 
-        if node.name == 'Operator'
-          Nokogiri::XML::SAX::Parser.new(OperatorNodeHandler.new).parse(xml)
-          self.class.operators.last[:xml] = xml
+        if node.name == 'OrganisationalUnit'
+          Nokogiri::XML::SAX::Parser.new(OrganisationalUnitNodeHandler.new).parse(xml)
+          self.class.organisational_units.last[:xml] = xml
         end
       end
       results = {
         :StopPlace => self.class.stop_places,
         :Quay      => self.class.quays,
-        :Operator  => self.class.operators
+        :OrganisationalUnit  => self.class.organisational_units
       }
       self.reset_processed
       results
@@ -102,7 +102,7 @@ module Reflex
     end
 
     class << self
-      attr_accessor :timeout, :format, :base_url, :quays, :stop_places, :operators
+      attr_accessor :timeout, :format, :base_url, :quays, :stop_places, :organisational_units
     end
   end
 end
