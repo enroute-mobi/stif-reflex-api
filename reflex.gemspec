@@ -19,13 +19,13 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", ">= 1.8.5"
   s.add_dependency "ruby-filemagic"
   s.add_dependency "rubyzip", ">= 1.2.2"
+  s.add_dependency "rgeo", '~> 2.0.1'
+  s.add_dependency "rgeo-proj4"
 
   s.add_development_dependency "awesome_print"
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
   s.add_development_dependency "webmock"
   s.add_development_dependency "rspec"
-  s.add_development_dependency "rgeo", '~> 2.0.1'
-  s.add_development_dependency "rgeo-proj4"
   s.add_development_dependency "bundler-audit"
 end

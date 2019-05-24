@@ -3,6 +3,8 @@ PATH
   specs:
     reflex (0.0.3)
       nokogiri (>= 1.8.5)
+      rgeo (~> 2.0.1)
+      rgeo-proj4
       ruby-filemagic
       rubyzip (>= 1.2.2)
 
@@ -41,7 +43,7 @@ GEM
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
     ruby-filemagic (0.7.2)
-    rubyzip (1.2.2)
+    rubyzip (1.2.3)
     safe_yaml (1.0.4)
     thor (0.20.0)
     webmock (3.3.0)
@@ -58,8 +60,6 @@ DEPENDENCIES
   bundler-audit
   rake
   reflex!
-  rgeo (~> 2.0.1)
-  rgeo-proj4
   rspec
   webmock
 
