@@ -1,6 +1,7 @@
 module Reflex
   class LamberWilson
     PROJ4 = '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+    WGS84_PROJ4 = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
     WKT   = <<-WKT
      PROJCS["RGF93 / Lambert-93",
        GEOGCS["RGF93",
@@ -27,10 +28,22 @@ module Reflex
        AXIS["X",EAST],
        AXIS["Y",NORTH]]
     WKT
+    WGS84_WKT = <<-WKT
+      GEOGCS["WGS 84",
+        DATUM["WGS_1984",
+          SPHEROID["WGS 84",6378137,298.257223563,
+            AUTHORITY["EPSG","7030"]],
+          AUTHORITY["EPSG","6326"]],
+        PRIMEM["Greenwich",0,
+          AUTHORITY["EPSG","8901"]],
+        UNIT["degree",0.01745329251994328,
+          AUTHORITY["EPSG","9122"]],
+        AUTHORITY["EPSG","4326"]]
+    WKT
 
     def initialize
       @lamber = RGeo::Cartesian.factory(:srid => 2154, :proj4 => PROJ4, :coord_sys => WKT)
-      @wgs84  = RGeo::Geographic.spherical_factory(:srid => 4326, :proj4 => RGeo::Geographic::_proj4_4326, :coord_sys => RGeo::Geographic::_coordsys_4326)
+      @wgs84  = RGeo::Geographic.spherical_factory(:srid => 4326, :proj4 => WGS84_PROJ4, :coord_sys => WGS84_WKT)
     end
 
     def to_wgs84(cord)
