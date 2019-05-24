@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Reflex do
   let(:client)  { Reflex::API.new }
-  let(:api_url) { "https://195.46.215.128/ws/reflex/V1/service=getData/?format=xml&idRefa=0" }
+  let(:api_url) { "https://pprod.reflex.stif.info/ws/rest/V2/getData?method=getAll" }
 
   it 'should have a version number' do
     expect(Reflex::VERSION).not_to be nil
@@ -18,26 +18,24 @@ describe Reflex do
   end
 
   it 'should raise exception on Api call timeout' do
-    stub_request(:get, "#{api_url}&method=getOR").to_timeout
-    expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
+    stub_request(:get, api_url).to_timeout
+    expect { client.api_request(method: 'getAll') }.to raise_error(Reflex::ReflexError)
   end
 
   it 'should raise exception on Reflex API response 404' do
-    stub_request(:get, "#{api_url}&method=getOR").to_return(status: 404)
-    expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
+    stub_request(:get, api_url).to_return(status: 404)
+    expect { client.api_request(method: 'getAll') }.to raise_error(Reflex::ReflexError)
   end
 
   context 'process file' do
-    let(:process_results) { client.process 'getOR' }
+    let(:process_results) { client.process 'getAll' }
     before(:each) do
-      ['getOR', 'getOP'].each do |name|
-        stub_request(:get, "#{api_url}&method=#{name}").
-        to_return(body: File.open("#{fixture_path}/reflex.zip"), status: 200)
-      end
+      stub_request(:get, api_url).
+      to_return(body: File.open("#{fixture_path}/reflex.zip"), status: 200)
     end
 
     it 'request should be successfull' do
-      response = client.api_request(method: 'getOR')
+      response = client.api_request(method: 'getAll')
       expect(response).to be_a Tempfile
     end
 
@@ -85,7 +83,7 @@ describe Reflex do
     end
 
     it 'should handle non zip files' do
-      stub_request(:get, "#{api_url}&method=getOR").
+      stub_request(:get, api_url).
       to_return(body: File.open("#{fixture_path}/reflex.xml"), status: 200)
 
       expect(process_results[:Quay].count).to eq 2
