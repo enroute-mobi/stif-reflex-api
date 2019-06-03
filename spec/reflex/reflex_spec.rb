@@ -82,6 +82,12 @@ describe Reflex do
       end
     end
 
+    it 'should retrieve the derived from reference of the quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['derivedFromObjectRef']).to eq "FR::Quay:29924:FR1"
+      end
+    end
+
     it 'should handle non zip files' do
       stub_request(:get, api_url).
       to_return(body: File.open("#{fixture_path}/reflex.xml"), status: 200)
