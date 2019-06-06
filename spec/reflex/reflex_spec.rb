@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe Reflex do
   let(:client)  { Reflex::API.new }
-  let(:api_url) { "https://195.46.215.128/ws/reflex/V1/service=getData/?format=xml&idRefa=0" }
+  let(:api_url) { "https://pprod.reflex.stif.info/ws/rest/V2/getData?method=getAll" }
 
   it 'should have a version number' do
     expect(Reflex::VERSION).not_to be nil
@@ -18,52 +18,82 @@ describe Reflex do
   end
 
   it 'should raise exception on Api call timeout' do
-    stub_request(:get, "#{api_url}&method=getOR").to_timeout
-    expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
+    stub_request(:get, api_url).to_timeout
+    expect { client.api_request(method: 'getAll') }.to raise_error(Reflex::ReflexError)
   end
 
   it 'should raise exception on Reflex API response 404' do
-    stub_request(:get, "#{api_url}&method=getOR").to_return(status: 404)
-    expect { client.api_request(method: 'getOR') }.to raise_error(Reflex::ReflexError)
+    stub_request(:get, api_url).to_return(status: 404)
+    expect { client.api_request(method: 'getAll') }.to raise_error(Reflex::ReflexError)
   end
 
   context 'process file' do
-    let(:process_results) { client.process 'getOR' }
+    let(:process_results) { client.process 'getAll' }
     before(:each) do
-      ['getOR', 'getOP'].each do |name|
-        stub_request(:get, "#{api_url}&method=#{name}").
-        to_return(body: File.open("#{fixture_path}/reflex.zip"), status: 200)
-      end
+      stub_request(:get, api_url).
+      to_return(body: File.open("#{fixture_path}/reflex.zip"), status: 200)
     end
 
     it 'request should be successfull' do
-      response = client.api_request(method: 'getOR')
+      response = client.api_request(method: 'getAll')
       expect(response).to be_a Tempfile
     end
 
     it 'should return results on valid request' do
       expect(process_results[:Quay].count).to eq 2
-      expect(process_results[:StopPlace].count).to eq 4
+      expect(process_results[:StopPlace].count).to eq 2
+      expect(process_results[:OrganisationalUnit].count).to eq 1
     end
 
-    it 'should retrieve town and postal address' do
-      expect(process_results[:Quay].first['Town']).to eq('Abloné-sur-Seine')
-      expect(process_results[:StopPlace].first['Town']).to eq('Dammartin-en-Goële')
+    it 'should retrieve type_of_organisation of organisational unit' do
+      expect(process_results[:OrganisationalUnit].first['type_of_organisation']).to eq('FR1-ARRET_Organisation')
     end
 
     it 'should retrieve long lat of quay' do
       process_results[:Quay].first.tap do |quay|
-        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.418826)
-        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.727687)
+        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.5187845)
+        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.9132038)
+      end
+    end
+
+    it 'should retrieve town and postal address' do
+      expect(process_results[:Quay].first['Town']).to eq('Livry-Gargan')
+      expect(process_results[:StopPlace].first['Town']).to eq('Livry-Gargan')
+    end
+
+    it 'should retrieve long lat of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['gml:pos'][:lng]).to be_within(0.000001).of(2.5187845)
+        expect(quay['gml:pos'][:lat]).to be_within(0.000001).of(48.9132038)
+      end
+    end
+
+    it 'should retrieve the destinations of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['destinations'].size).to eq 1
+        expect(quay['destinations'].first['Name']).to eq '234'
+      end
+    end
+
+    it 'should retrieve the tariff zones of quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['tariff_zones'].size).to eq 1
+        expect(quay['tariff_zones'].first).to eq 'FR1:TariffZone:4:LOC'
+      end
+    end
+
+    it 'should retrieve the derived from reference of the quay' do
+      process_results[:Quay].first.tap do |quay|
+        expect(quay['derivedFromObjectRef']).to eq "FR::Quay:29924:FR1"
       end
     end
 
     it 'should handle non zip files' do
-      stub_request(:get, "#{api_url}&method=getOR").
+      stub_request(:get, api_url).
       to_return(body: File.open("#{fixture_path}/reflex.xml"), status: 200)
 
       expect(process_results[:Quay].count).to eq 2
-      expect(process_results[:StopPlace].count).to eq 4
+      expect(process_results[:StopPlace].count).to eq 2
     end
   end
 

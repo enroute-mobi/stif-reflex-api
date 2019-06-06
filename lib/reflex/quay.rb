@@ -3,6 +3,8 @@ module Reflex
     def start_document
       @quay          = {}
       @text_stack    = []
+      @is_destination = false
+      @destinations  = []
       @previous_node = nil
       @lamber        = LamberWilson.new
     end
@@ -10,15 +12,27 @@ module Reflex
     def end_document
       @quay['type']    = 'Quay'
       @quay['gml:pos'] = @lamber.to_longlat(@quay['gml:pos'])
+      @quay['destinations'] = @destinations
       @quay.delete_if { |k, v| v.nil? }
       API.quays << @quay
     end
 
     def start_element(name, attrs = [])
-      @quay = Hash[attrs] if name == 'Quay'
+      @quay           = Hash[attrs]        if name == 'Quay'
+      @quay['parent'] = Hash[attrs]['ref'] if name == 'ParentZoneRef'
+
+      if name == 'TariffZoneRef'
+        @quay['tariff_zones'] ||= []
+        @quay['tariff_zones'] << Hash[attrs]['ref']
+      elsif name == 'DestinationDisplayView'
+        @is_destination = true
+        @destinations << Hash[attrs]
+      end
     end
 
     def end_element(name)
+      @is_destination = false if name == 'DestinationDisplayView'
+
       string = @text_stack.join
       @text_stack = []
       return if string.empty?
@@ -31,7 +45,11 @@ module Reflex
         @previous_node = name
         @quay[string] = nil
       else
-        @quay[name] = @quay[name].to_s + string
+        if @is_destination
+          @destinations.last[name] = @destinations.last[name].to_s + string
+        else
+          @quay[name] = @quay[name].to_s + string
+        end
       end
     end
 
